@@ -17,8 +17,8 @@ library("tibble")
 set.seed(1234)
 
 
-dmc_cutoff <- 0.2
-meandiff_cutoff <- 0.1
+dmc_cutoff <- 0.2 #the minimum absolute difference in DNA methylation between two groups for a CpG to be considered differentially methylated. If the observed difference in methylation  is greater than this cutoff (> 0.2 or < -0.2), and the statistical test is also significant (p-val), then the CpG site is classified as "hypermethylated" or "hypomethylated".
+meandiff_cutoff <- 0.1 #only methylation differences of a DMR greater than ±0.1 are considered important.
 
 # Parallel backend is registered
 cores_to_use <- 2
