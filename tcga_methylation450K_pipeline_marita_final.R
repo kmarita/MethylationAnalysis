@@ -56,7 +56,7 @@ keep_defs <- c("Primary_solid_Tumor", "Solid_Tissue_Normal")
 data.sub  <- data.met[, data.met$definition %in% keep_defs]
 coldat    <- as.data.frame(colData(data.sub))
 
-# 4. Find patients with at least one of each
+# 4. Find patients with at least one of each. We need patients with either one or the other so we have both samples for each cancer.
 patients_all <- unique(coldat$patient)
 tbl <- table(coldat$patient, coldat$definition)
 patients_with_both <- rownames(tbl)[tbl[, "Primary_solid_Tumor"] > 0 & tbl[, "Solid_Tissue_Normal"] > 0]
@@ -66,7 +66,7 @@ if (length(patients_with_both) == 0) {
   cat(sprintf("No matched Primary_solid_Tumor & Solid_Tissue_Normal samples found in %s.\n", cancer_type))
   
 } else {
-  # Subset to only the paired patients
+  # Subset to only the paired patients. It only includes samples from patients who have both tumor and normal tissue samples.
   data.paired <- data.sub[, colData(data.sub)$patient %in% patients_with_both]
   clinical.paired <- as.data.frame(colData(data.paired))
   
