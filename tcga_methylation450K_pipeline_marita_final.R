@@ -17,18 +17,25 @@ library("tibble")
 set.seed(1234)
 
 
-dmc_cutoff <- 0.2 #the minimum absolute difference in DNA methylation between two groups for a CpG to be considered differentially methylated. If the observed difference in methylation  is greater than this cutoff (> 0.2 or < -0.2), and the statistical test is also significant (p-val), then the CpG site is classified as "hypermethylated" or "hypomethylated".
-meandiff_cutoff <- 0.1 #only methylation differences of a DMR greater than ±0.1 are considered important.
+dmc_cutoff <- 0.1
+meandiff_cutoff <- 0.1
 
 # Parallel backend is registered
 cores_to_use <- 2
 registerDoParallel(cores = cores_to_use)
 
-cancer_type <- "TCGA-LIHC"
-mirna_genes_bed <- "/Users/ross/Desktop/Projects/PasteurProjects/BSc theses/Methylation - Marita/miRNA_genes.sorted.bed"
-main_dir <- "/Users/ross/Desktop/Projects/PasteurProjects/BSc theses/Methylation - Marita"
+cancer_type <- "TCGA-LUAD"
+mirna_genes_bed <- "~/methylation_project/miRNA_genes.sorted.bed"
+main_dir <- "~/methylation_project"
+
+# Check if directory exists, create if needed
+if (!dir.exists(main_dir)) {
+  dir.create(main_dir, recursive = TRUE)
+}
 
 setwd(main_dir)
+print(paste("Working directory set to:", getwd())) 
+
 out_dir <- file.path(main_dir, "methylation_analysis_results", cancer_type)
 dir.create(out_dir, showWarnings = FALSE, recursive = TRUE)
 
@@ -56,39 +63,30 @@ keep_defs <- c("Primary_solid_Tumor", "Solid_Tissue_Normal")
 data.sub  <- data.met[, data.met$definition %in% keep_defs]
 coldat    <- as.data.frame(colData(data.sub))
 
-# 4. Find patients with at least one of each. We need patients with either one or the other so we have both samples for each cancer.
-patients_all <- unique(coldat$patient)
-tbl <- table(coldat$patient, coldat$definition)
-patients_with_both <- rownames(tbl)[tbl[, "Primary_solid_Tumor"] > 0 & tbl[, "Solid_Tissue_Normal"] > 0]
 
-# 5. Report & subset
-if (length(patients_with_both) == 0) {
-  cat(sprintf("No matched Primary_solid_Tumor & Solid_Tissue_Normal samples found in %s.\n", cancer_type))
-  
-} else {
-  # Subset to only the paired patients. It only includes samples from patients who have both tumor and normal tissue samples.
-  data.paired <- data.sub[, colData(data.sub)$patient %in% patients_with_both]
-  clinical.paired <- as.data.frame(colData(data.paired))
-  
-  # One row per patient
-  clin.unique <- clinical.paired[!duplicated(clinical.paired$patient), ]
-  
-  cat(sprintf("Found %d paired patients in %s.\n", length(patients_with_both), cancer_type))
-  cat("Number of paired patients: ", length(patients_with_both), "\n")
-  avg_age_days  <- mean(as.numeric(clin.unique$age_at_diagnosis), na.rm = TRUE)
-  avg_age_years <- avg_age_days / 365.25
-  cat(sprintf("Average age of paired patients: %.1f days (%.1f years)\n", avg_age_days, avg_age_years))
-  cat("Sex distribution of paired patients:\n")
-  print(table(clin.unique$gender))
-  rm(avg_age_days, avg_age_years)
-  
-  # overwrite for downstream
-  data.met <- data.paired
-  clinical.data <- clin.unique
-  
-}
-rm(query_met, keep_defs, data.sub, coldat, patients_all, tbl, data.paired, clinical.paired, clin.unique)
+# 4. Use all available samples (no pairing requirement)
+clinical.all <- as.data.frame(colData(data.sub))
 
+# Get summary statistics for all samples
+tumor_samples <- sum(clinical.all$definition == "Primary_solid_Tumor")
+normal_samples <- sum(clinical.all$definition == "Solid_Tissue_Normal")
+
+cat(sprintf("Found %d tumor samples and %d normal samples in %s.\n", tumor_samples, normal_samples, cancer_type))
+
+# Get unique patients for demographic summary
+clin.unique <- clinical.all[!duplicated(clinical.all$patient), ]
+avg_age_days  <- mean(as.numeric(clin.unique$age_at_diagnosis), na.rm = TRUE)
+avg_age_years <- avg_age_days / 365.25
+cat(sprintf("Average age of patients: %.1f days (%.1f years)\n", avg_age_days, avg_age_years))
+cat("Sex distribution of patients:\n")
+print(table(clin.unique$gender))
+rm(avg_age_days, avg_age_years)
+
+# Use all samples for downstream analysis
+data.met <- data.sub
+clinical.data <- clin.unique
+
+rm(query_met, keep_defs, data.sub, coldat, tumor_samples, normal_samples, clinical.all)
 
 
 ########################### PART 2
@@ -180,7 +178,7 @@ dmc <- TCGAanalyze_DMC(data          = data.met,
                        group2        = "Solid_Tissue_Normal", # normal group
                        p.cut         = 1,                     # FDR cutoff (no cutoff for now)
                        diffmean.cut  = 0,                     # allow all Δβ through
-                       paired        = TRUE,                  # paired test
+                       paired        = FALSE,                  # NOT paired test
                        save          = FALSE,                 # no intermediate files
                        plot.filename = NULL,                  # no output
                        cores         = cores_to_use)
@@ -254,7 +252,6 @@ dmc_tidy <- dmc_annotated %>%
          Adj_P_Value         = p.value.adj.Primary.solid.Tumor.Solid.Tissue.Normal,
          Methylation_Status  = Status)
 
-
 # 6. Output table
 out_tsv <- file.path(out_dir, paste0(cancer_type, "_DMC_allProbes.tsv"))
 write.table(dmc_tidy, file = out_tsv, sep = "\t", quote = FALSE, row.names = FALSE)
@@ -305,13 +302,35 @@ dmc_miRNA_tidy <- miRNA_list %>%
          Adj_P_Value          = p.value.adj.Primary.solid.Tumor.Solid.Tissue.Normal,
          Methylation_Status   = Status)
 
+
 # 6. Write to TSV
 out_tsv <- file.path(out_dir, paste0(cancer_type, "_DMCs_in_miRNA.tsv"))
 write.table(dmc_miRNA_tidy, file = out_tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+
+# Volcano plot for DMCs in miRNA genes 
+p_volc_miRNA_DMC <- ggplot(dmc_miRNA_tidy, aes(x = Delta_Beta, y = -log10(Adj_P_Value), color = Methylation_Status)) +
+  geom_point(alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c("Hypermethylated" = "#8ABFA3", "Hypomethylated" = "#F95454", "Not Significant" = "#B7B7B7")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+  geom_vline(xintercept = c(-dmc_cutoff, dmc_cutoff), linetype = "dashed") +
+  labs(
+    title = paste0("Volcano Plot of DMCs in miRNA Genes: ", cancer_type),
+    subtitle = paste0("With a Δβ cutoff of ", dmc_cutoff),
+    x = "Mean Δβ (Tumor vs. Normal)",
+    y = "-log10(Adjusted p-value)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    axis.title = element_text(size = 13),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 11)
+  )
+ggsave(file.path(out_dir, paste0(cancer_type, "_DMC_volcano_miRNA.png")), plot = p_volc_miRNA_DMC, bg = "white", width = 12, height = 10, dpi = 300)
+
 rm(hits, ov, miRNA_list, dmc_miRNA_tidy, out_tsv, probe_gr, dmc_probe_gr, dmc_probes, dmc_df, dmc_cutoff, 
    dmc, dmc_annotated, dmc_tidy, p_volc, probe_anno)
-
-
 
 ########################### PART 6a
 
@@ -355,7 +374,21 @@ significantRegions_df$Status <- with(significantRegions_df,
                                                    "Not Significant")))
 
 # 6. Volcano plot: median Δβ vs. -log10(FDR)
-
+p_volc_dmr <- ggplot(significantRegions_df, aes(x = meandiff, y = -log10(min_smoothed_fdr), color = Status)) +
+  geom_point(alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c("Hypermethylated" = "#8ABFA3", "Hypomethylated" = "#F95454", "Not Significant" = "#B7B7B7")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+  geom_vline(xintercept = c(-meandiff_cutoff, meandiff_cutoff), linetype = "dashed") +
+  labs(title = paste0("Volcano Plot of Differential Methylated Regions: ", cancer_type),
+       subtitle = paste0("With a mean Δβ cutoff of ", meandiff_cutoff),
+       x = "Mean Δβ (Tumor vs. Normal)",
+       y = "-log10(FDR)") +
+  theme_minimal(base_size = 14) +
+  theme(legend.position = "top",
+        axis.title = element_text(size = 13),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 11))
+ggsave(file.path(out_dir, paste0(cancer_type, "_DMR_volcano.png")), plot = p_volc_dmr, bg = "white", width = 12, height = 10, dpi = 300)
 
 # 7. Print summary counts
 cat("Hypermethylated DMRs:", sum(significantRegions_df$Status == "Hypermethylated"), "\n")
@@ -413,3 +446,24 @@ dmr_miRNA <- significantRegions_df %>%
 # 5. Write out the miRNA‐overlapping DMRs
 out_tsv <- file.path(out_dir, paste0(cancer_type, "_DMRs_in_miRNA.tsv"))
 write.table(dmr_miRNA, file = out_tsv, sep = "\t", quote = FALSE, row.names = FALSE)
+
+# Volcano plot for DMRs in miRNA genes
+p_volc_miRNA_DMR <- ggplot(dmr_miRNA, aes(x = Median_DeltaBeta, y = -log10(Region_FDR), color = DMR_Status)) +
+  geom_point(alpha = 0.7, size = 1.2) +
+  scale_color_manual(values = c("Hypermethylated" = "#8ABFA3", "Hypomethylated" = "#F95454", "Not Significant" = "#B7B7B7")) +
+  geom_hline(yintercept = -log10(0.05), linetype = "dashed") +
+  geom_vline(xintercept = c(-meandiff_cutoff, meandiff_cutoff), linetype = "dashed") +
+  labs(
+    title = paste0("Volcano Plot of DMRs in miRNA Genes: ", cancer_type),
+    subtitle = paste0("With a Δβ cutoff of ", meandiff_cutoff),
+    x = "Median Δβ (Tumor vs. Normal)",
+    y = "-log10(Region FDR)"
+  ) +
+  theme_minimal(base_size = 14) +
+  theme(
+    legend.position = "top",
+    axis.title = element_text(size = 13),
+    legend.title = element_blank(),
+    legend.text = element_text(size = 11)
+  )
+ggsave(file.path(out_dir, paste0(cancer_type, "_DMR_volcano_miRNA.png")), plot = p_volc_miRNA_DMR, bg = "white", width = 12, height = 10, dpi = 300)
