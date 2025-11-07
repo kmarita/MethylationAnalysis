@@ -1,0 +1,40 @@
+Total cancer types with significant miRNA DMRs: 22
+
+
+Total common DMRs (in 2+ cancers): 71
+Concordant DMRs (all same direction): 55
+  All Hypermethylated: 21
+  All Hypomethylated: 34
+Discordant DMRs (mixed directions): 16
+
+
+miRNA x Cancer DMR matrix created with 55 miRNAs and 22 cancer types
+
+Matrix summary:
+  Total miRNAs: 55
+  Total cancer types: 22
+  Total non-zero entries: 672
+  Max DMRs for any miRNA-cancer pair: 4
+
+Top 20 miRNAs by total common DMRs across all cancers:
+hsa-mir-4251:44          #total account of DMRs in this miRNA in all cancer. For example, there might be 4 unique DMRs but they are identified in different frequencies               			 #in all cancers (e.g., 12 times in BRCA etc.) and thus 44 is the sum of those appearances. Its about frequency "How often does this miRNA have 			 #DMRs across ALL cancers?"
+hsa-mir-153-2:36   
+hsa-mir-593:36   
+hsa-mir-7160:32  
+hsa-mir-4316:27   
+hsa-mir-3667:25   
+hsa-mir-148b:24   
+hsa-mir-4323:17  
+hsa-mir-1283-2:14 
+hsa-mir-516a-1:14
+hsa-mir-516a-2:14
+hsa-mir-519a-1:14 
+hsa-mir-519a-2:14  
+hsa-mir-521-1:14    
+hsa-mir-522:14    
+hsa-mir-527:14  
+hsa-mir-663a:14   
+hsa-mir-4298:13   
+hsa-mir-4710:13   
+hsa-mir-5196:13
+                                                                                
