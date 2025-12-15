@@ -1,0 +1,11 @@
+common_miRNAs_CpGs_detailed.tsv:πίνακας για κάθε CpG site, με coordinates και με τους καρκίνους στους οποίους εμφανίζεται και με ποιο miRNA κάνει overlap.
+
+concordant_miRNA_DMCs_summary.tsv: πίνακας για κάθε miRNA που αναφέρει τα CpG sites, methylation status, και σε πόσους καρκίνους εμφανίζονται
+
+miRNA_cancer_common_cpg_matrix.tsv: πίνακας μεταξύ miRNA kai cancer όπου αναφέρονται πόσα κοινά CpG sites βρέθηκαν για κάθε συνδιασμό miRNA - cancer. Αναφέρεται στην συχνότητα εμφάνισης των CpG sites. Για παράδειγμα, βλέπουμε στο concordant_miRNA_DMCs_summary.tsv, ότι το hsa-let-7a-1 έχει 1 concordant miRNA που είναι hypermethylated και εμφανίζεται σε δυο καρκίνους. Γι'αυτό, στο miRNA_cancer_common_cpg_matrix.tsv θα δούμε μια μονάδα στο  ESCA και μια στο KIRP (δεν συμαίνει απαραίτητα ότι έχω δυο μοναδικά cpgs)
+
+miRNA_cancer_common_dmr_matrix.tsv: πίνακας μεταξύ miRNA και cancer όπου αναφέρονται πόσα κοινά concordant DMRs βρέθηκαν για κάθε συνδιασμό miRNA - cancer.
+
+concordant_miRNA_DMRs_summary.tsv:  πίνακας για κάθε miRNA που αναφέρει τα concordant DMRs, methylation status, και σε πόσους καρκίνους εμφανίζονται.
+
+concordant_DMRs_detailed.tsv: πίνακας για κάθε concordant DMR, με coordinates και με τους καρκίνους στους οποίους εμφανίζεται και με ποιο miRNA κάνει overlap.

@@ -1,0 +1,23 @@
+Cancer	DMC %	DMR %	DMC Ratio	DMR Ratio	Pattern
+LIHC	25.6%	25.7%	3.97:1 hypo	6.06:1 hypo	Strong hypomethylation
+BRCA	21.7%	18.9%	1.50:1 hyper	1.37:1 hyper	Moderate hypermethylation
+BLCA	27.1%	28.2%	2.85:1 hypo	3.65:1 hypo	Strong hypomethylation
+CESC	0.0%	24.2%	N/A	1.17:1 hyper	DMRs only, slight hyper
+CHOL	11.6%	14.3%	2.97:1 hyper	3.74:1 hyper	Strong hypermethylation
+COAD	21.0%	18.7%	1.15:1 hypo	1.09:1 hypo	Balanced (nearly equal)
+ESCA	18.0%	18.1%	1.02:1 hypo	1.10:1 hypo	Balanced (nearly equal)
+GBM	0.0%	6.5%	N/A	1.06:1 hyper	DMRs only, balanced
+HNSC	22.8%	20.9%	1.16:1 hypo	1.48:1 hypo	Slight hypomethylation
+LUAD	19.2%	16.1%	1.15:1 hyper	1.07:1 hyper	Balanced (nearly equal)
+LUSC	24.0%	22.8%	1.63:1 hypo	2.00:1 hypo	Moderate hypomethylation
+PAAD	11.6%	8.9%	1.40:1 hyper	1.57:1 hyper	Moderate hypermethylation
+PCPG	0.0%	14.3%	N/A	3.98:1 hypo	DMRs only, strong hypo
+PRAD	17.7%	14.7%	3.13:1 hyper	3.32:1 hyper	Strong hypermethylation
+READ	19.7%	22.9%	2.25:1 hypo	2.78:1 hypo	Moderate hypomethylation
+SARC	0.0%	5.1%	N/A	3.54:1 hypo	DMRs only, strong hypo
+STAD	0.0%	1.7%	N/A	1.83:1 hypo	Minimal methylation
+SKCM	0.0%	7.1%	N/A	1.51:1 hyper	DMRs only, moderate hyper
+KIRP	13.4%	9.3%	3.36:1 hyper	3.96:1 hyper	Strong hypermethylation
+THYM	0.0%	0.06%	N/A	2.38:1 hyper	Minimal methylation
+KIRC	13.2%	8.8%	1.13:1 hypo	1.09:1 hypo	Balanced (nearly equal)
+UCEC	25.9%	25.3%	1.33:1 hypo	1.60:1 hypo	Moderate hypomethylation
