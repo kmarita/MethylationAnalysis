@@ -1,0 +1,31 @@
+Common CpGs in miRNAs-Cancer
+
+Matrix summary:
+  Total miRNAs: 218
+  Total cancer types: 15
+  Total non-zero entries: 2641
+  Max CpGs for any miRNA-cancer pair: 49
+
+Top 20 miRNAs by total common CpGs across all cancers:
+
+  hsa-mir-4251:526 
+  hsa-mir-3185:360   
+  hsa-mir-9-2:295       
+  hsa-mir-759: 257   
+  hsa-mir-124-2:182  
+  hsa-mir-129-2:164   
+  hsa-mir-1197: 160    
+  hsa-mir-299:160   
+  hsa-mir-323a: 160  
+  hsa-mir-329-1 : 160 
+  hsa-mir-329-2:160  
+  hsa-mir-379:160   
+  hsa-mir-380 :160    
+  hsa-mir-411: 160     
+  hsa-mir-758 : 160    
+  hsa-mir-9-3: 160  
+  hsa-mir-4472-1:133  
+  hsa-mir-5087:128  
+  hsa-mir-7154:119  
+  hsa-mir-153-2:116 
+                                               
