@@ -1,0 +1,73 @@
+oaded 247 significant miRNA DMRs from TCGA-BRCA
+Loaded 370 significant miRNA DMRs from TCGA-BLCA
+Loaded 284 significant miRNA DMRs from TCGA-CESC
+Loaded 174 significant miRNA DMRs from TCGA-CHOL
+Loaded 220 significant miRNA DMRs from TCGA-COAD
+Loaded 230 significant miRNA DMRs from TCGA-ESCA
+Loaded 82 significant miRNA DMRs from TCGA-GBM
+Loaded 279 significant miRNA DMRs from TCGA-HNSC
+Loaded 95 significant miRNA DMRs from TCGA-KIRC
+Loaded 107 significant miRNA DMRs from TCGA-KIRP
+Loaded 311 significant miRNA DMRs from TCGA-LIHC
+Loaded 293 significant miRNA DMRs from TCGA-LUSC
+Loaded 172 significant miRNA DMRs from TCGA-LUAD
+Loaded 101 significant miRNA DMRs from TCGA-PAAD
+Loaded 170 significant miRNA DMRs from TCGA-PCPG
+Loaded 199 significant miRNA DMRs from TCGA-PRAD
+Loaded 294 significant miRNA DMRs from TCGA-READ
+Loaded 57 significant miRNA DMRs from TCGA-SARC
+Loaded 84 significant miRNA DMRs from TCGA-SKCM
+Loaded 16 significant miRNA DMRs from TCGA-STAD
+Loaded 1 significant miRNA DMRs from TCGA-THYM
+Loaded 341 significant miRNA DMRs from TCGA-UCEC
+
+Total cancer types with significant miRNA DMRs: 22
+
+Converting 22 cancer types to GRanges.. .
+Combining GRanges objects.. .
+Starting with TCGA-BRCA: 247 DMRs
+  Added TCGA-BLCA (total: 617 DMRs)
+  Added TCGA-CESC (total: 901 DMRs)
+  Added TCGA-CHOL (total: 1075 DMRs)
+  Added TCGA-COAD (total: 1295 DMRs)
+  Added TCGA-ESCA (total: 1525 DMRs)
+  Added TCGA-GBM (total: 1607 DMRs)
+  Added TCGA-HNSC (total: 1886 DMRs)
+  Added TCGA-KIRC (total: 1981 DMRs)
+  Added TCGA-KIRP (total: 2088 DMRs)
+  Added TCGA-LIHC (total: 2399 DMRs)
+  Added TCGA-LUSC (total: 2692 DMRs)
+  Added TCGA-LUAD (total: 2864 DMRs)
+  Added TCGA-PAAD (total: 2965 DMRs)
+  Added TCGA-PCPG (total: 3135 DMRs)
+  Added TCGA-PRAD (total: 3334 DMRs)
+  Added TCGA-READ (total: 3628 DMRs)
+  Added TCGA-SARC (total: 3685 DMRs)
+  Added TCGA-SKCM (total: 3769 DMRs)
+  Added TCGA-STAD (total: 3785 DMRs)
+  Added TCGA-THYM (total: 3786 DMRs)
+  Added TCGA-UCEC (total: 4127 DMRs)
+Merged 4127 DMRs → 822 unique regions
+
+
+Total common DMRs (in 10+ cancers): 110
+Concordant DMRs (all same direction): 89
+  All Hypermethylated:  35
+  All Hypomethylated: 54
+Discordant DMRs (mixed directions): 21
+
+
+miRNA x Cancer DMR matrix created with 74 miRNAs and 22 cancer types
+Matrix saved to: ~/methylation_project/methylation_analysis_results/miRNA_cancer_common_dmr_matrix.tsv
+
+Matrix summary:
+  Total miRNAs: 74
+  Total cancer types: 22
+  Total non-zero entries: 920
+  Max DMRs for any miRNA-cancer pair: 9
+
+Top 20 miRNAs by total common DMRs across all cancers:
+  hsa-mir-4251  hsa-mir-153-2    hsa-mir-593   hsa-mir-4316   hsa-mir-3667   hsa-mir-7160   hsa-mir-4276   hsa-mir-6720  hsa-mir-129-2   hsa-mir-148b   hsa-mir-5571    hsa-mir-650   hsa-mir-8074   hsa-mir-7154 
+            94             71             48             38             35             35             33             27             24             24             23             23             23             21 
+  hsa-mir-4323   hsa-mir-663a hsa-mir-1283-2  hsa-mir-3135b hsa-mir-516a-1 hsa-mir-516a-2 
+            17             15             14             14             14             14 
